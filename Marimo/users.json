@@ -1,0 +1,23 @@
+{
+  "mojo": {
+    "password": "scrypt:32768:8:1$Q5bzIJAyHeS5fgcq$8249414fb40e151c3fba97be7610f33aee4ddeaf4c588a5e8cf35827cfbade81ae6fad1a267899d76316604d49e11b93f2c2509023c5c8f2a9c7c57bd56251f9"
+  },
+  "kamo": {
+    "password": "scrypt:32768:8:1$qnKqTEtUBMvRGPiy$4e8b976a73f89a1d11c2edaa5ab85c08e7209cf25c280406c44382e3e02533ef77f678319466f7dbc1ccbfd2c10a80b172f828a42a71ec7df921e7edf1f64cf5"
+  },
+  "valow": {
+    "password": "scrypt:32768:8:1$PQvhkyXIMWrpHSeh$8000f0e29263047eff126be3619eb81bf75d3b713ba21ab60440aa5245d29f6b8ba0da1e0434cf061539809ebcf94e3b1279cc49444cb31cf385822d908d36dc"
+  },
+  "aew": {
+    "password": "scrypt:32768:8:1$iHQ4RYgmCIHh5Q4t$9488ffe2a8efa9e6273e7af34b82b37590f9590dc28957a0fe11f50ddc3d9eef6c528a3417f7dd7a065b78f734d6c553425dae4a1ca155b0b47555cd3c582436"
+  },
+  "popo": {
+    "password": "scrypt:32768:8:1$A8AZkqFVS0HVpzqX$075f4c9d8749f659f096d885e76ff769213631b8c2be95143faa72470aa5f4d6f1317305bba64527a039da29ec2cfa56281e8a44366d09e95f25ef36f38bebbe"
+  },
+  "popopo": {
+    "password": "scrypt:32768:8:1$PoU8RshSxJa7c3g5$bd70bb129fba52c91d6c5d1860385ce145999f13976fab477f5abe10fbe989c17aca30f03e884b9930fe565c757e3e84e8587e3858250f5e3f47edfef1a6ff18"
+  },
+  "koko": {
+    "password": "scrypt:32768:8:1$tH0zxInyZ1wnemuA$7490674c72e645dba6e03f42b1f742f10665f80b57e5cb24fff106c287298e934be01f22a66d30598db900ea9c2d18fba211d2e9bbad2182c828a610b108a32a"
+  }
+}

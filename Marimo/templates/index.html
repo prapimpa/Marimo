@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="th">
+<head> 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chatbot คอมพิวเตอร์</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Prompt', sans-serif;
+  background: linear-gradient(135deg, #69b4ff, #2f3db4);
+  height: 100vh;
+  margin: 0;
+  padding-top: 90px;
+  padding-bottom: 50px; /* ⭐ เพิ่มบรรทัดนี้ */
+  overflow: hidden;
+}
+
+body.night-mode {
+  background: linear-gradient(135deg, #0a0a1a, #1a2b4c);
+}
+
+/* กล่องแชท */
+#chatbox {
+  width: 85%;
+  max-width: 1400px;
+  height: calc(100vh - 90px - 50px - 20px);
+  background: #ffffff;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* กันไม่ให้ input หลุด */
+  border: 3px solid #002e5d;
+  box-shadow: 0 0 25px rgba(118,182,238,0.6),
+              0 0 60px rgba(16,45,73,0.4);
+  margin: 0 auto 20px auto;
+}
+#chatbox:hover {
+  box-shadow: 0 0 40px rgba(30, 57, 94, 0.8),
+              0 0 90px rgba(105, 180, 255, 0.6);
+}
+
+/* ปุ่มสวิตช์ */
+.theme-toggle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 60px;
+  height: 30px;
+  background: #eee;
+  border-radius: 30px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: background 0.4s;
+  margin-top: 60px;
+}
+.theme-toggle::before {
+  content: "☀️";
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  font-size: 18px;
+  transition: transform 0.4s;
+}
+body.night-mode .theme-toggle {
+  background: #333;
+}
+body.night-mode .theme-toggle::before {
+  content: "🌙";
+  transform: translateX(30px);
+}
+
+/* กล่องข้อความ */
+#messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto; /* ⭐ เลื่อนเฉพาะตรงนี้ */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* bubble พื้นฐาน */
+.message {
+  padding: 10px 16px;
+  border-radius: 18px;
+  max-width: 65%;
+  line-height: 1.6;
+  animation: fadeIn 0.4s ease-in-out;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/* ข้อความผู้ใช้ */
+.user {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,123,255,0.4);
+}
+
+/* ข้อความบอท */
+.bot {
+  background: #f1f3f6;
+  color: #333;
+  align-self: flex-start;
+  border-bottom-left-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+
+/* ส่วนป้อนข้อความ */
+#input-area {
+  display: flex;
+  border-top: 1px solid #ddd;
+  background: #fafafa;
+  padding: 10px;
+}
+#input-area input {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 30px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 15px;
+  transition: all 0.2s;
+}
+#input-area input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0,123,255,0.5);
+}
+#input-area button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50%;
+  background: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 10px rgba(0,123,255,0.6);
+}
+#input-area button:hover {
+  background: #0056b3;
+  box-shadow: 0 0 20px rgba(0,123,255,0.9);
+}
+.navi {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 70px;
+  background: #ffffff;
+  z-index: 1000;
+}
+
+
+    /* ปุ่ม */
+   
+    /* hover effect */
+    .nav-btn:hover {
+      background: #0056b3;
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    a {
+      background: #567ef7;
+      color: white;
+      padding: 5px;
+      border: 3px solid #00def3;
+      border-radius: 10px 30px;
+      height: 25px;
+      text-decoration: none;
+    }
+
+    a:hover {
+      background: #09396c;
+      padding: 10px;
+      border: 3px solid #00ffbf;
+    }
+
+.logo {
+  position: absolute;
+  left: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.logo span {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+}
+
+/* เมนูตรงกลาง */
+.menu {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 20px;
+}
+
+/* hover effect */
+.nav-btn:hover {
+  background: #0056b3;
+  box-shadow: 0 6px 20px rgba(0,123,255,0.5);
+  transform: translateY(-2px);
+}
+
+/* Dark mode */
+body.night-mode .navi {
+  background: #1a1a2e;
+}
+
+body.night-mode .nav-btn {
+  background: #4d79ff;
+}
+
+
+body.night-mode .nav-btn:hover {
+  background: #334d99;
+}
+body.night-mode .logo span {
+  color: #ffffff;
+  text-shadow:
+    0 0 5px  #ffffff,
+    0 0 10px #00eaff,
+    0 0 20px #00eaff,
+    0 0 40px #00bfff;
+}
+
+
+a{
+  background: #567ef7;
+  color: white;
+  padding: 5px;
+  border: 3px solid #00def3;
+  border-radius: 10px 30px;
+  height: 25px;
+  text-decoration: none;
+}
+a:hover{
+  background: #09396c;
+  padding:10px;
+  border: 3px solid #00ffbf;
+}
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 5px 0; /* เพิ่ม padding เล็กน้อย */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    /* ใช้ Glassmorphism style เดียวกับ card */
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px); /* เอฟเฟกต์เบลอ */
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.2);
+    color: #cdd7ff; /* สีข้อความอ่อนลงเล็กน้อย */
+    font-size: 14px;
+    z-index: 900; /* ให้ต่ำกว่า navi */
+    height: 50px; /* กำหนดความสูงที่ชัดเจน */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body.night-mode footer {
+    background: rgba(26, 29, 59, 0.5); /* สีเข้มขึ้นใน night mode */
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.5);
+  }
+.text {
+    text-align: center;        /* จัดข้อความกึ่งกลาง */
+    margin-top: 10px;          /* เว้นระยะด้านบน */
+    font-family: 'Arial', sans-serif;
+    color: #2c3e50;            /* สีข้อความ */
+    display: flex;
+}
+  /* ... (CSS ส่วนอื่น ๆ) ... */
+
+/* responsive มือถือ */
+@media (max-width: 600px) {
+  .navi {
+    gap: 5px;                /* เว้นระยะปุ่มเล็กลง */
+    padding: 5px 0;
+    align-items: center;
+  }
+
+  .nav-btn {
+    padding: 5px 10px;       /* ลดขนาดปุ่ม */
+    font-size: 14px;         /* ลดตัวอักษร */
+    width: 50%;              /* ให้เต็มความกว้างนิดหน่อย */
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0,123,255,0.3);
+  }
+
+  a {
+    padding: 5px 10px;       /* ลด padding */
+    border-width: 2px;
+    font-size: 14px;
+    width: 90%;
+    text-align: center;
+  }
+ .nav-btn:hover {
+  background: #0056b3;
+  box-shadow: 0 6px 20px rgba(0,123,255,0.5);
+  transform: translateY(-2px);
+}
+}
+
+
+
+/* โหมดกลางคืน */
+body.night-mode {
+  background-color: #111; /* สีเข้มกว่า #222 จะ contrast ดีกว่า */
+  color: #ddd; /* ข้อความทั่วไปสีอ่อน */
+}
+
+body.night-mode h1 {
+  color: #ffffff !important; /* สีขาวเต็ม */
+  text-shadow: 0 0 5px #000; /* เพิ่มความเด่น */
+}
+
+
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 500px) {
+  #chatbox {
+    width: 95%;
+    height: calc(100vh - 90px - 50px - 20px);
+  }
+}
+</style>
+</head>
+<body>
+  <header>
+<!-- ปุ่มสวิตช์ -->
+<div class="theme-toggle" id="themeToggle"></div>
+
+<!-- ปุ่ม Logout -->
+<div style="position: absolute; top: 20px; right: 20px;">
+  <form action="{{ url_for('logout') }}" method="get">
+      <button type="submit" style="padding:8px 12px; border:none; border-radius:8px; background:#ff4d4d; color:white; cursor:pointer; box-shadow:0 0 10px rgba(255,77,77,0.7); margin-top: 60px;" onmouseover="this.style.background='#740000'" onmouseout="this.style.background='#ff4d4d'">
+          Logout
+      </button>
+  </form>
+</div>
+<div class="navi">
+  <div class="logo">
+    <img src="https://i.ibb.co/35psqGnr/Chat-GPT-Image-Dec-30-2025-01-17-35-PM.png" alt="logo">
+    <span>MARIMO</span>
+  </div>
+
+  <div class="menu">
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('recom') }}">วิธีการใช้งาน</a>
+    <a href="{{ url_for('index') }}">แชทบอท</a>
+    <a href="{{ url_for('contact') }}">ติดต่อเรา</a>
+  </div>
+</div>
+   
+</header>
+
+
+<div id="chatbox">
+  <div id="messages"></div>
+  <div id="input-area">
+    <input type="text" id="userInput" placeholder="พิมพ์ข้อความ... กด Enter เพื่อส่ง">
+    <button onclick="sendMessage()">➤</button>
+  </div>
+</div>
+
+<script>
+  // ฟังก์ชันเพิ่มข้อความในแชท
+  function addMessage(text, sender) {
+  const msg = document.createElement("div");
+  msg.className = `message ${sender}`;
+  msg.textContent = text;
+
+  const messages = document.getElementById("messages");
+  messages.appendChild(msg);
+  messages.scrollTo({
+    top: messages.scrollHeight,
+    behavior: "smooth"
+  });
+}
+
+
+ 
+  // ส่งข้อความ
+  async function sendMessage() {
+  const input = document.getElementById("userInput");
+  const text = input.value.trim();
+  if (!text) return;
+
+  addMessage(text, 'user');
+  input.value = "";
+
+  const response = await fetch("/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text })
+  });
+
+  const data = await response.json();
+  addMessage(data.reply, 'bot');
+}
+
+  // กด Enter เพื่อส่ง
+  document.getElementById("userInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  // สวิตช์โหมดกลางคืน
+  document.getElementById("themeToggle").addEventListener("click", function() {
+    document.body.classList.toggle("night-mode");
+  });
+</script>
+ <footer>
+  <div class="footer">
+    <p>marimo - © 2025 All Rights Reserved.</p>
+  </footer>
+</body>
+</html>
